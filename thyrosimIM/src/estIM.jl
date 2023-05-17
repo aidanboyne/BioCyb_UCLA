@@ -1,6 +1,6 @@
 # Last updated from dev: May 08, 11:58
 
-using DifferentialEquations, Optim, Plots, DataFrames, LinearAlgebra, ComponentArrays, CSV, BenchmarkTools, ForwardDiff
+using DifferentialEquations, Optim, Plots, DataFrames, LinearAlgebra, CSV
 
 # Placeholder until some way to pass fixed, free parameters separatley is implemented
 function fixed_parameters()
