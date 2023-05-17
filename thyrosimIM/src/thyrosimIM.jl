@@ -9,7 +9,7 @@ module thyrosimIM
     include("estIM.jl")
 
     export initialize_free, initialize_free_varied
-    export thyrosimIM_estimate
+    export ics, thyrosimIM_estimate
     export fit_params, prefit_error, output_plotIM
     export CV_estim
 
