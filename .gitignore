@@ -13,3 +13,5 @@ __pycache__
 
 # ignore archived versions
 archived/
+thyrosimIM/data/
+thyrosimIM/images/
