@@ -1,16 +1,19 @@
 module thyrosimIM
 
+    export load_sample_data, execute_fitting, output_plotIM, view_estimate!
+    export lsq_loss, demeaned_neg_logl
+
     using DifferentialEquations
     using Optim
     using Plots
     using DataFrames
     using CSV
+    using DataFrames
 
-    include("estIM.jl")
-
-    export initialize_free, initialize_free_varied
-    export ics, thyrosimIM_estimate
-    export fit_params, prefit_error, output_plotIM
-    export CV_estim
+    # Add includes here...
+    include("initialize.jl")
+    include("ODEs.jl")
+    include("utils.jl")
+    include("estimate.jl")
 
 end # module thyrosimIM
