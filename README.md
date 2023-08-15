@@ -1,9 +1,3 @@
-BioCybernetics Lab at UCLA
----
-
-Updating p-Thyrosim with immune components and deiodinases. 
-
-
 # Thyrosim Architecture
 
 ## thyrosim.jl
