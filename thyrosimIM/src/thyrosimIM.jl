@@ -1,19 +1,21 @@
 module thyrosimIM
 
-    export load_sample_data, execute_fitting, output_plotIM, view_estimate!
-    export lsq_loss, demeaned_neg_logl
+    export thyrosimIM!, fixed_parameters, initialize_free, initialize_all, ics # Aidan's model
+    export meha_model!, meha_free, meha_ics # Meha's model
+    export plot_patient, optim_plotter, output_plotIM # Plotting Functions
 
     using DifferentialEquations
     using Optim
     using Plots
     using DataFrames
+    using LinearAlgebra
     using CSV
-    using DataFrames
+    using Statistics
+    using MuladdMacro
 
     # Add includes here...
     include("initialize.jl")
     include("ODEs.jl")
-    include("utils.jl")
-    include("estimate.jl")
+    include("plotters.jl")
 
 end # module thyrosimIM

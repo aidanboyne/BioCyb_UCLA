@@ -1,9 +1,8 @@
-"""
-Initialize the fixed parameters (all p-thyrosim parameters)
-"""
+# Placeholder until some way to pass fixed, free parameters separatley is implemented
 function fixed_parameters()
-    p = zeros(Float64, 82)
+
     dial=[1.0; 0.88; 1.0; 0.88]
+    p = zeros(Float64, 82)
     p[1] = 0.0027785399344 #S4
     p[2] = 8               #tau
     p[3] = 0.868           #k12
@@ -87,10 +86,126 @@ function fixed_parameters()
     return p
 end
 
-"""
-Initialize model initial conditions
-"""
 function ics()
+    ic    = zeros(Float64, 25)
+    ic[1] = 0.322114215761171 #T4dot
+    ic[2] = 0.201296960359917 #T4fast
+    ic[3] = 0.638967411907560 #T4slow
+    ic[4] = 0.00663104034826483 #T3pdot
+    ic[5] = 0.0112595761822961 #T3fast
+    ic[6] = 0.0652960640300348 #T3slow
+    ic[7] = 1.78829584764370 #TSHp
+    ic[8] = 7.05727560072869 #T3B
+    ic[9] = 7.05714474742141 #T3B_lag
+    ic[10] = 0 #T4PILLdot
+    ic[11] = 0 #T4GUTdot
+    ic[12] = 0 #T3PILLdot
+    ic[13] = 0 #T3GUTdot
+    ic[14] = 3.34289716182018 #delay1
+    ic[15] = 3.69277248068433 #delay2
+    ic[16] = 3.87942133769244 #delay3
+    ic[17] = 3.90061903207543 #delay4
+    ic[18] = 3.77875734283571 #delay5
+    ic[19] = 3.55364471589659 #delay6
+    #immune
+    ic[20] = 320 # B-cells
+    ic[21] = 80 # Plasma cells 
+    ic[22] = 680 # CD4+ cells
+    ic[23] = 5e9 # Cytokines
+    ic[24] = 5 # FTS
+    ic[25] = 240*10e-13 # Antibodies
+
+    return ic
+end
+
+function initialize_free()
+    p = zeros(23)
+    # Immune Parameters
+    p[1] = 3e-3 # 83 B-cell activation rate, will probably be lower due to T3 term p[15]
+    p[2] = 1e-2 # 84 Plasma cell transformation rate
+    p[3] = 8.05e-1 # 85 CD4+ activation rate
+    p[4] = 51.84e5 # 86 Cytokine production rate
+    p[5] = 1e5 # 87 relative growth rate of FTS
+    p[6] = 1e5 # 88 combined antibody production rate
+    p[7] = 1e-6 # 89 B-cell death rate
+    p[8] = 2.0e-2 # 90 Plasma cell death rate
+    p[9] = 4.91e-3 # 91 CD4+ cell death rate
+    p[10] = 1.189e3  # 92 Cytokine degredation rate
+    p[11] = 1e-2 # 93 Functional thyroid destruction rate
+    p[12] = 1.74e-2 # 94 Blood Ab degredation rate
+    p[13] = 18e5 # 95 B-cell cytokine binding activation threshold
+    p[14] = 2e6 # 96 CD4+ T-cell cytokine binding activation threshold
+    p[15] = 1e5 # 97 FT4 B-cell stimulation NOTE: NEED TO FIT and CHANGE - try changing this a lot
+    p[16] = 1e3 # 98 FT4 T-cell stimulation
+    p[17] = 9.1e-4 # 99 CD4+ T-cell stimulation rate
+    p[18] = 13.5 # 100 Euthyroid FTS
+
+    # Fitting Variance
+    p[19] = 1 # 101 T4 Variance
+    p[20] = 1 # 102 T3 Variance
+    p[21] = 1 # 103 TSH Variance
+    p[22] = 1 # 104 Lymphocyte Variance
+    p[23] = 1 # 105 Antibody Variance
+
+    return p
+end
+
+function initialize_all(;optimal::Bool=false, optimal_path::String="")
+    p = zeros(105)
+    p[1:82] = fixed_parameters()
+    
+    if optimal
+        import_parameters(optimal_path)
+    else
+        p[83:105] = initialize_free()
+    end
+
+    return p
+end
+
+
+function meha_free()
+
+    # alpha and beta (p[17,18]) should be related as p[17] = 1/p[18]... need to take out and renumber parameters eventually 
+    p = zeros(30)
+    p[1] = 3e-3 # B-cell activation rate, will probably be lower due to T3 term p[15]
+    p[2] = 1e-2 # Plasma cell transformation rate
+    p[3] = 1.05e-5 # CD4+ activation rate
+    p[4] = 51.84e5 # Cytokine production rate
+    p[5] = 1e6 # relative growth rate of FTS
+    p[6] = 1e-6 # combined antibody production rate
+    p[7] = 2e-6 # B-cell death rate
+    p[8] = 4.0e-2 # Plasma cell death rate
+    p[9] = 8.91e-1 # CD4+ cell death rate
+    p[10] = .189  # Cytokine degredation rate
+    p[11] = 1e-2 # Functional thyroid destruction rate
+    p[12] = 1.74e-3 # Blood Ab degredation rate
+    p[13] = 18e5 # B-cell cytokine binding activation threshold
+    p[14] = 2e6 # CD4+ T-cell cytokine binding activation threshold
+    p[15] = 1e3 # NOTE: NOT USED IN THE FUNCTION!!!
+    p[16] = 9.1e-4 # CD4+ T-cell stimulation rate
+    p[17] = 1 #alpha
+    p[18] = 1 #beta
+    p[19] = 0.068 #k1
+    p[20] = 0.063 #k2
+    p[21] = 1 #n
+
+    # Fitting Variance
+    p[22] = 1 # 100 T4 Variance
+    p[23] = 1 # 101 T3 Variance
+    p[24] = 1 # 102 TSH Variance
+    p[25] = 1 # 103 B-cell Variance
+    p[26] = 1 # 104 Plasma Cell Variance
+    p[27] = 1 # 105 CD4+ Cell Variance
+    p[28] = 1 # 106 Cytokine Variance
+    p[29] = 1 # 107 TPOAb Variance
+    p[30] = 1 # 108 TGAb Variance
+
+    return p
+end
+
+function meha_ics()
+
     ic    = zeros(Float64, 25)
     ic[1] = 0.322114215761171 #T4dot
     ic[2] = 0.201296960359917 #T4fast
@@ -117,73 +232,8 @@ function ics()
     ic[21] = 20 # Plasma cells 
     ic[22] = 100 # CD4+ cells
     ic[23] = 5e9 # Cytokines
-    ic[24] = 5 # FTS
-    ic[25] = 2e9 # Antibodies
+    ic[24] = 3.122e8 #TPOAb
+    ic[25] = 1.43e8 #TGAb
 
     return ic
-end
-
-"""
-Initialize free parameters including variances for MLE fitting
-"""
-function initialize_free()
-    p = zeros(26)
-    # Immune Parameters
-    p[1] = 3e-3 # 83 B-cell activation rate, will probably be lower due to T3 term p[15]
-    p[2] = 1e-2 # 84 Plasma cell transformation rate
-    p[3] = 8.05e-1 # 85 CD4+ activation rate
-    p[4] = 51.84e5 # 86 Cytokine production rate
-    p[5] = 1e6 # 87 relative growth rate of FTS
-    p[6] = 1e6 # 88 combined antibody production rate
-    p[7] = 2e-6 # 89 B-cell death rate
-    p[8] = 4.0e-2 # 90 Plasma cell death rate
-    p[9] = 8.91e-3 # 91 CD4+ cell death rate
-    p[10] = .189  # 92 Cytokine degredation rate
-    p[11] = 1e-2 # 93 Functional thyroid destruction rate
-    p[12] = 1.74e-3 # 94 Blood Ab degredation rate
-    p[13] = 18e5 # 95 B-cell cytokine binding activation threshold
-    p[14] = 2e6 # 96 CD4+ T-cell cytokine binding activation threshold
-    p[15] = 1e3 # 97 NOTE: NEED TO FIT and CHANGE
-    p[16] = 9.1e-4 # 98 CD4+ T-cell stimulation rate
-    p[17] = 13.5 # 99 Euthyroid FTS
-
-    # Fitting Variance
-    p[18] = 1 # 100 T4 Variance
-    p[19] = 1 # 101 T3 Variance
-    p[20] = 1 # 102 TSH Variance
-    p[21] = 1 # 103 B-cell Variance
-    p[22] = 1 # 104 Plasma Cell Variance
-    p[23] = 1 # 105 CD4+ Cell Variance
-    p[24] = 1 # 106 Cytokine Variance
-    p[25] = 1 # 107 FTS Variance
-    p[26] = 1 # 108 Antibody Variance
-
-    return p
-end
-
-"""
-Initialize free parameters, excluding variances (for LSQ fitting)
-"""
-function initialize_novariance()
-    p = zeros(17)
-    # Immune Parameters
-    p[1] = 3.9e-3 # B-cell activation rate, will probably be lower due to T3 term p[15]
-    p[2] = 1.2e-2 # Plasma cell transformation rate
-    p[3] = 3.05e-1 # CD4+ activation rate
-    p[4] = 56.84e5 # Cytokine production rate
-    p[5] = 1.1e6 # relative growth rate of FTS
-    p[6] = 1e6 # combined antibody production rate
-    p[7] = 2.2e-6 # B-cell death rate
-    p[8] = 3.0e-2 # Plasma cell death rate
-    p[9] = 1.91e-4 # CD4+ cell death rate
-    p[10] = .389  # Cytokine degredation rate
-    p[11] = 1.4e-2 # Functional thyroid destruction rate
-    p[12] = 1.34e-3 # Blood Ab degredation rate
-    p[13] = 78e4 # B-cell cytokine binding activation threshold
-    p[14] = 23e5 # CD4+ T-cell cytokine binding activation threshold
-    p[15] = 3.2e3 # NOTE: NEED TO FIT and CHANGE
-    p[16] = 1.8e-4 # CD4+ T-cell stimulation rate
-    p[17] = 12.5 # Euthyroid FTS
-
-    return p
 end
