@@ -55,12 +55,12 @@ ODEs for thyroid-immune compartmental model thyrosimIM.
 
     # ---------- IMMUNE ODEs ---------- q[20:Bcell, 21:Pcell, 22:Tcell, 23:Cytokine, 24:FTS, 25:TPOAb]
 
-    dq[20] = p[83]*(q[23]/(q[23]+p[96]))*q[22]+(p[98]*q1F)-(p[90]+p[84])*q[20] # Bdot -- changed to T4 stimulation
-    dq[21] = p[84]*q[20]-p[91]*q[21] # Pdot
-    dq[22] = p[85]*q[24]+p[88]*q1F-p[99]*(q[23]/(q[23]+p[97]))*q[22]-p[92]*q[22] # Tdot
-    dq[23] = p[86]*q[22]-p[93]*q[23] # Cdot
-    dq[24] = p[87]*((q7/q[24])*p[100])-p[94]*(q[24])*q[25] #p[87]*((q7/q[24])*p[100])-p[93]*(q[24]/p[100])*q[25] # FTSdot MODIFIED
-    dq[25] = p[89]*q[21]-q[25]*(p[95]+p[93]*q[24]) # Abdot
+    dq[20] = p[83]*(q[23]/(q[23]+p[95]))*q[22]+(p[97]*q1F)-(p[89]+p[84])*q[20] # Bdot -- changed to T4 stimulation
+    dq[21] = p[84]*q[20]-p[90]*q[21] # Pdot
+    dq[22] = p[85]*q[24]+p[98]*q1F-p[99]*(q[23]/(q[23]+p[96]))*q[22]-p[91]*q[22] # Tdot
+    dq[23] = p[86]*q[22]-p[92]*q[23] # Cdot
+    dq[24] = p[87]*((q7/q[24])*p[100])-p[93]*(q[24])*q[25] #p[87]*((q7/q[24])*p[100])-p[93]*(q[24]/p[100])*q[25] # FTSdot MODIFIED
+    dq[25] = p[88]*q[21]-q[25]*(p[94]+p[93]*q[24]) # Abdot
 
     return nothing
 end

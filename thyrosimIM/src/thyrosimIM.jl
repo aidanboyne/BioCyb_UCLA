@@ -14,7 +14,7 @@ module thyrosimIM
     using MuladdMacro
 
     # Add includes here...
-    include("initialize.jl")
+    # include("initialize.jl") #temporarily moved back to DDR
     include("ODEs.jl")
     include("plotters.jl")
 

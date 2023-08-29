@@ -1,3 +1,24 @@
+# Convert from internal to plotting/fitting units
+function FT4(TT4)
+    return (777.0 * 0.02 * TT4[1])/(8*3.2)
+end
+
+# Welsh KJ, Soldin SJ. doi: 10.1530/EJE-16-0193. converts TT3 (mcg/L) to FT3 (pg/dL)
+function FT3(TT3)
+    return (651.0 * TT3[1] * 100)/(3.2)
+end
+
+function TPOConvert(TPOAb)
+    return ((TPOAb)[1])
+end
+
+# function TGConvert(TG)
+#     return ((TG)[1])*6.022e8
+# end
+
+function TSHfit(TSH)
+    return TSH
+end
 """
 Emulate data_plotter.py plots used for data selection to double check import success.
 """
@@ -17,7 +38,6 @@ function plot_patient(patient; title::String="Patient Labs")
     p1 = scatter!(t, labs.T4, alpha = 0.3, label="")
     
     p2 = plot(t, labs.T3, label="", xlim=xlims, ylabel=T4T3Labels[2])
-    any(meds.Lyothyronine .!= 0) && (p2 = plot!(twinx(), meds.Lyothyronine, xlim=xlims, ylabel="Liothyronine (mcg/day)", label = "Dose", color = "red", xticks=:none))
     p2 = hline!(T4T3Ranges[2], label= "")
     p2 = scatter!(t, labs.T3, alpha = 0.3, label="")
     
@@ -25,7 +45,7 @@ function plot_patient(patient; title::String="Patient Labs")
     p3 = hline!([0.45, 4.5], label= "")
     p3 = scatter!(t, labs.TSH, alpha = 0.3)
 
-    p4 = plot(t, labs.Lymphocytes, xlim=xlims, ylabel="Lymphocytes (cell/mL)", label="")
+    p4 = plot(t, labs.Lymphocytes, xlim=xlims, ylabel="Lymphocytes (cell/μL)", label="")
     p4 = scatter!(t, labs.Lymphocytes, alpha = 1, label="")
 
     p5 = plot(t, labs.Ab, ylabel="TPOAb (IU/mL)", xlim=xlims, xlabel="time [days]", label="")
@@ -80,7 +100,7 @@ function output_plotIM(sol, data; title::AbstractString = "ThyrosimIM simulation
     p3 = hline!([0.45, 4.5], label= "")
     p3 = scatter!(data.t./24, data.TSH, alpha = 0.3, label= "")
 
-    p4 = plot(sol.t / 24.0, Lymphocytes, ylabel="Lymphocytes (cell/mL)", ylim=(0,Llim), xlim=xlim, label="")
+    p4 = plot(sol.t / 24.0, Lymphocytes, ylabel="Lymphocytes (cell/μL)", ylim=(0,Llim), xlim=xlim, label="")
     p4 = scatter!(data.t./24, data.Lymphocytes, alpha = 0.3, label= "")
     p4 = plot!(sol.t /24.0, Bcell, label = "B-Cells")
     p4 = plot!(sol.t /24.0, Tcell, label = "T-Cells")
@@ -141,7 +161,7 @@ function optim_plotter(sol, data; title::AbstractString = "ThyrosimIM simulation
     p3 = hline!([0.45, 4.5], label= "")
     p3 = scatter!(data.t./24, data.TSH, alpha = 0.3, label= "")
 
-    p4 = plot(sol.t / 24.0, Lymphocytes, ylabel="Lymphocytes (cell/mL)", ylim=(0,Llim), xlim=xlim, label="")
+    p4 = plot(sol.t / 24.0, Lymphocytes, ylabel="Lymphocytes (cell/μL)", ylim=(0,Llim), xlim=xlim, label="")
     p4 = scatter!(data.t./24, data.Lymphocytes, alpha = 0.3, label= "")
     p4 = plot!(sol.t /24.0, Bcell, label = "B-Cells")
     p4 = plot!(sol.t /24.0, Tcell, label = "T-Cells")
