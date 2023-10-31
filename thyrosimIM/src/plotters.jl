@@ -117,7 +117,7 @@ function output_plotIM(sol, data; title::AbstractString = "ThyrosimIM simulation
     p_main[:plot_title] = title
     if save_to_file
         saveplot = plot(p_main)
-        savefig(saveplot, "img/optimization_prog_$(plot_no)")
+        savefig(saveplot, "img/$(ID)_optimization_$(plot_no)")
     else
         plot(p_main)
     end
@@ -126,7 +126,7 @@ end
 """
 Plotter for in-optimization solution tracking.
 """
-function optim_plotter(sol, data; title::AbstractString = "ThyrosimIM simulation", automargins::Bool=true, save_to_file = false, plot_no::Int = 1)
+function optim_plotter(sol, data; title::AbstractString = "ThyrosimIM simulation", automargins::Bool=true, save_to_file = false, plot_no::Int = 1, ID::Int = 1)
 
     # can definitley clean up this code quite a bit later (looped plotting, get rid of unnecessary plots...)
     # parameters to adjust figure limits
@@ -178,7 +178,7 @@ function optim_plotter(sol, data; title::AbstractString = "ThyrosimIM simulation
     p_main[:plot_title] = title
     if save_to_file
         saveplot = plot(p_main)
-        savefig(saveplot, "img/optimization_prog_$(plot_no)")
+        savefig(saveplot, "img/$(ID)_optimization_$(plot_no)")
     else
         plot(p_main)
     end
