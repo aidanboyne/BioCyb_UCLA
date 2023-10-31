@@ -1,0 +1,5 @@
+Available information for patient 958996582, Female, 34  years old as of most recent lab
+Hashimoto's diagnosis date: 12/25/2019
+First recorded lab:  12/24/2019 
+BMI Statistics: Min 24.11, Mean 25.348999999999997, Max 26.19
+Data location: C:/Users/Aidan/Documents/GitHub/BioCyb/thyrosimIM/data/Parsed_data/patient-958996582.csv
